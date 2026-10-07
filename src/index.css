@@ -1,0 +1,218 @@
+@import '@fontsource-variable/manrope/wght.css';
+@import '@fontsource-variable/noto-sans-devanagari/wght.css';
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------
+   SETU brand faces — taken from the original SETU pitch deck.
+   Self-hosted so the prototype still works offline.
+   Big Shoulders Display Black is a single black-weight family, so the
+   face is declared across the whole weight range to stop the browser
+   synthesising a fake bold on top of it.
+------------------------------------------------------------------ */
+@font-face {
+  font-family: 'Big Shoulders Display';
+  src: url('/fonts/BigShouldersDisplayBlack-Regular.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ------------------------------------------------------------------
+   SETU — design tokens
+   Cream (paper) and charcoal alternate. Orange is the single action
+   colour and stays precious. Green means one thing only: covered,
+   confirmed, delivered. Everything else is warm stone.
+   Values are the exact palette from the SETU pitch deck.
+------------------------------------------------------------------ */
+@theme {
+  --font-sans: 'Manrope Variable', 'Manrope', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', sans-serif;
+  --font-display: 'Big Shoulders Display', 'Arial Narrow', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-deva: 'Noto Sans Devanagari Variable', 'Noto Sans Devanagari', 'Manrope Variable',
+    sans-serif;
+
+  /* surfaces */
+  --color-paper: #faf7ef;
+  --color-paper-2: #f2ecdf;
+  --color-paper-3: #e6dfd0;
+  --color-surface: #fffdf8;
+
+  /* charcoal + text */
+  --color-ink: #1a1a1a;
+  --color-ink-2: #2b2824;
+  --color-ink-3: #4a443d;
+  --color-quiet: #6b6259;
+  --color-faint: #968c7e;
+
+  /* borders + dividers */
+  --color-line: #d9d0c1;
+  --color-line-2: #c3b8a5;
+
+  /* signature action */
+  --color-orange: #f97316;
+  --color-orange-deep: #ea6812;
+  --color-orange-ink: #c2410c;
+  --color-orange-tint: #fde3cf;
+
+  /* one meaning only: covered · confirmed · delivered */
+  --color-green: #2f6b4f;
+  --color-green-deep: #24543d;
+  --color-green-tint: #dceae0;
+
+  --radius-plate: 6px;
+  --radius-tile: 12px;
+  --radius-panel: 16px;
+  --radius-sheet: 22px;
+
+  /* the deck has almost no drop shadow — keep it to a hint */
+  --shadow-lift: 0 1px 2px rgba(26, 26, 26, 0.05), 0 10px 30px -22px rgba(26, 26, 26, 0.35);
+  --shadow-sheet: 0 -20px 60px -24px rgba(26, 26, 26, 0.4);
+
+  --ease-setu: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-orange) 30%, transparent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  [data-surface='ink'] :focus-visible,
+  .focus-light:focus-visible {
+    outline-color: var(--color-orange);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  p {
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+
+  [aria-pressed='true'] {
+    scroll-margin: 0;
+  }
+}
+
+@layer components {
+  /* Transport micro label — the deck's mono station tags. */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-quiet);
+  }
+
+  /* Departure-board numerals. */
+  .numeric {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+    letter-spacing: 0.01em;
+  }
+
+  /* Editorial headline face. Already black-weight — never ask for more. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0.005em;
+    line-height: 0.9;
+  }
+
+  /* Very light paper tooth. Only on large flat regions. */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    opacity: 0.04;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+
+  .grain-dark::after {
+    opacity: 0.08;
+    mix-blend-mode: soft-light;
+  }
+}
+
+@layer utilities {
+  .pad-safe-b {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

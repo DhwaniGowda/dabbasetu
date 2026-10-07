@@ -1,0 +1,143 @@
+/* ------------------------------------------------------------------
+   SETU — the landing film.
+   Loaded only with the landing chunk, so the product screens are untouched.
+------------------------------------------------------------------ */
+
+/* Lenis needs these; inlined rather than importing the package stylesheet. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* While the tab is hidden the story clock is frozen and WebGL is idle. */
+.setu-story-off .story-canvas {
+  visibility: hidden;
+}
+
+/* ------------------------------------------------------------------
+   Cinematic type scale. Big Shoulders Display Black is the deck's own
+   face and the whole point is that it is allowed to leave the frame.
+------------------------------------------------------------------ */
+.film-reset * {
+  box-sizing: border-box;
+}
+
+.t-hero {
+  font-size: clamp(3.4rem, 15.5vw, 13rem);
+  line-height: 0.82;
+  letter-spacing: -0.005em;
+}
+
+.t-xl {
+  font-size: clamp(2.75rem, 10.5vw, 8.5rem);
+  line-height: 0.86;
+}
+
+.t-lg {
+  font-size: clamp(2rem, 6.4vw, 4.6rem);
+  line-height: 0.92;
+}
+
+.t-md {
+  font-size: clamp(1.5rem, 3.9vw, 2.7rem);
+  line-height: 1.02;
+}
+
+.t-stat {
+  font-size: clamp(3.1rem, 12.5vw, 9rem);
+  line-height: 0.8;
+}
+
+/* Masked lines: the wrapper clips, the child slides up from under it. */
+.mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.mask > span {
+  display: block;
+  will-change: transform;
+}
+
+.hairline {
+  height: 1px;
+  background: currentColor;
+  opacity: 0.22;
+}
+
+/* A single, barely-there grain pass over the whole film. */
+.film-grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* The persistent WebGL layer: between the "behind" and "over" DOM layers. */
+.story-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/*
+ * R3F's own canvas element does not inherit that, and a full-viewport canvas
+ * that swallows clicks is exactly the kind of thing that only shows up under a
+ * real mouse. Everything interactive lives above it (z-20/z-30), but the canvas
+ * itself must still be transparent to input.
+ */
+.story-canvas canvas {
+  pointer-events: none;
+}
+
+/*
+ * The layer that sits BEHIND the canvas. Sticky so it holds for the chapter,
+ * with a negative margin so it consumes no flow space and its sibling stage can
+ * pin from the very top too. z-index 5 sits under the canvas's 10.
+ */
+.story-under {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  height: 100dvh;
+  margin-bottom: -100dvh;
+  overflow: hidden;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Vignette used on the darkest chapters so the type always holds. */
+.vignette::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 80% at 50% 45%, transparent 38%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story-canvas {
+    opacity: 0.9;
+  }
+}
